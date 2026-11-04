@@ -4,8 +4,8 @@ CREATE table events (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     title VARCHAR(128) NOT NULL,
     description VARCHAR(256) NOT NULL,
-    imageUrl VARCHAR(256) NOT NULL,
-    eventUrl VARCHAR(256) NOT NULL,
+    image_url VARCHAR(256) NOT NULL,
+    event_url VARCHAR(256) NOT NULL,
     remote BOOLEAN NOT NULL,
     date TIMESTAMP NOT NULL
 );
@@ -15,9 +15,9 @@ CREATE table coupons (
     code VARCHAR(128) NOT NULL,
     discount INTEGER NOT NULL ,
     valid TIMESTAMP NOT NULL,
-    eventId UUID,
+    event_id UUID,
 
-    FOREIGN KEY (eventId) references events(id) on delete cascade
+    FOREIGN KEY (event_id) references events(id) on delete cascade
 );
 
 CREATE table addresses
@@ -25,7 +25,7 @@ CREATE table addresses
     id      UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     city    VARCHAR(64) NOT NULL,
     uf      VARCHAR(64) NOT NULL,
-    eventId UUID,
+    event_id UUID,
 
-    FOREIGN KEY (eventId) references events (id) on delete cascade
+    FOREIGN KEY (event_id) references events (id) on delete cascade
 );
