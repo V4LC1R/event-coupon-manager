@@ -12,20 +12,16 @@ import java.util.List;
 import java.util.UUID;
 
 public interface EventRepository extends JpaRepository<Event, UUID> {
-        @Query("Select e From Event e WHERE e.date >= :currentDate")
+        @Query("Select e From Event e LEFT JOIN FETCH e.address a WHERE e.date >= :currentDate")
         Page<Event> findUpcomingEvents(@Param("currentDate") Date currentDate, Pageable pageable);
 
-        @Query("Select e from Event e" +
-                " LEFT JOIN e.address a" +
-                " WHERE e.date >= :currentDate AND" +
-                " (:title IS NULL OR e.title LIKE %:title%) AND" +
-                " (:city IS NULL OR a.city LIKE %:city%) AND" +
-                " (:uf IS NULL OR a.uf LIKE %:uf%) AND" +
-                " (:startDate IS NULL OR e.date >=:startDate) AND" +
-                " (:endDate IS NULL OR e.date <=:endDate)"
+        @Query("Select e from Event e LEFT JOIN e.address a " +
+                "WHERE (:title = '' OR e.title LIKE %:title%) " +
+                "AND (:city = '' OR a.city LIKE %:city%) " +
+                "AND (:uf = '' OR a.uf LIKE %:uf%) " +
+                "AND (e.date  >=:startDate AND e.date <=:endDate)"
         )
         Page<Event> findFilteredEvents(
-                @Param("currentDate") Date currentDate,
                 @Param("title") String title,
                 @Param("city") String city,
                 @Param("uf") String uf,

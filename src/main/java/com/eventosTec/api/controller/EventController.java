@@ -1,6 +1,8 @@
 package com.eventosTec.api.controller;
 
+import com.amazonaws.Response;
 import com.eventosTec.api.domain.event.Event;
+import com.eventosTec.api.domain.event.EventDetailsDTO;
 import com.eventosTec.api.domain.event.EventRequestDTO;
 import com.eventosTec.api.domain.event.EventResponseDTO;
 import com.eventosTec.api.service.EventService;
@@ -12,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/event")
@@ -57,6 +60,12 @@ public class EventController {
         return ResponseEntity.ok(list);
     }
 
+    @GetMapping("/{eventId}")
+    public ResponseEntity<EventDetailsDTO> getEventDetail(@PathVariable UUID eventId){
+        EventDetailsDTO eventDetail = eventService.getEventDetails(eventId);
+        return ResponseEntity.ok(eventDetail);
+    }
+
     @GetMapping("/filter")
     public ResponseEntity<List<EventResponseDTO>> filteredEvents(
             @RequestParam(defaultValue = "0") int page,
@@ -64,8 +73,8 @@ public class EventController {
             @RequestParam(required = false) String title,
             @RequestParam(required = false) String city,
             @RequestParam(required = false) String uf,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Date startDate,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Date endDate
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate
     ){
         List<EventResponseDTO> list = eventService.getFilteredEvents(page,size,title,city,uf,startDate,endDate);
 
